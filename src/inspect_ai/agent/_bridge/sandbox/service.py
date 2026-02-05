@@ -142,6 +142,7 @@ def call_tool(
         result = await tool_fn(**arguments)
 
         # MCP returns strings, so serialize if needed
+        print(f"sandbox bridge call_tool() {result=}")
         if isinstance(result, str):
             return result
         return json.dumps(result)

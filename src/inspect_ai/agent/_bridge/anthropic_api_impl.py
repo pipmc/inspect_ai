@@ -154,10 +154,10 @@ async def inspect_anthropic_api_request_impl(
 
 
 def debug_log(caption: str, o: Any) -> None:
-    # from inspect_ai._util.json import to_json_str_safe
+    from inspect_ai._util.json import to_json_str_safe
 
-    # print(caption)
-    # print(to_json_str_safe(o))
+    print(caption)
+    print(to_json_str_safe(o))
     pass
 
 

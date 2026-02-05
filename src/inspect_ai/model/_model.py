@@ -4,10 +4,12 @@ import functools
 import json
 import logging
 import os
+import sys
 import time
 from contextvars import ContextVar
 from copy import copy, deepcopy
 from datetime import datetime, timezone
+import traceback
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
@@ -930,7 +932,10 @@ class Model:
         return model_output, event
 
     def should_retry(self, ex: BaseException) -> bool:
+        logger.error(f"should_retry: {ex}", file=sys.stderr)
         if isinstance(ex, Exception):
+            logger.error("!! should_retry exception", file=sys.stderr)
+            logger.error(traceback.format_exc())
             # attempt timeout is always retried (we rely on `timeout`
             # and/or `max_retries` for termination)
             if isinstance(ex, AttemptTimeoutError):
@@ -967,6 +972,10 @@ class Model:
         return False
 
     async def before_retry(self, ex: BaseException) -> None:
+        logger.error(f"before_retry: {ex}", file=sys.stderr)
+        if isinstance(ex, Exception):
+            logger.error("!! before_retry exception", file=sys.stderr)
+            logger.error(traceback.format_exc())
         if isinstance(ex, Exception) and self.api.is_auth_failure(ex):
             # close existing model instance
             await self.api.aclose()
